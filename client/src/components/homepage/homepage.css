@@ -718,3 +718,15 @@ button:hover{
         height: auto;
     }
 }
+
+.flash-animation{
+    width: fit-content;
+    font-size: 30px;
+    clip-path: inset(0 100% 0 0);
+    animation: l5 2s steps(20) infinite;
+}
+  .flash-animation:before {
+    content:"Thinking..."
+  }
+ 
+  @keyframes l5 {to{clip-path: inset(0 -1ch 0 0)}}

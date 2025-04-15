@@ -4,6 +4,7 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import Button from "@mui/material/Button";
 import axios from "axios";
 import path from "../../path";
+import pathai from '../../pathai.js';
 import { useEffect } from "react";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import ShareIcon from "@mui/icons-material/Share";
@@ -22,7 +23,7 @@ import {
 import BookmarkAddedRoundedIcon from "@mui/icons-material/BookmarkAddedRounded";
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import { Brain, Tag } from "phosphor-react";
+import { Brain, Pen, PencilSimpleLine, Tag, TextUnderline } from "phosphor-react";
 import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import SendIcon from "@mui/icons-material/Send";
 import { ToastContainer, toast } from "react-toastify";
@@ -37,6 +38,22 @@ import {
   List,
 } from "@mui/material";
 import Popup from "../common/popup";
+// import { EditorView } from '@codemirror/view';
+
+// Create a custom theme
+const myTheme = EditorView.theme({
+  '&': {
+    color: 'white', // 🌊 Text color
+    backgroundColor: 'black', // Optional: background
+    fontSize: '16px',
+  },
+  '.cm-content': {
+    caretColor: 'white', // Optional: cursor color
+  },
+  '.cm-scroller': {
+    fontFamily: 'monospace', // or 'Poppins', 'Arial', etc.
+  },
+});
 
 
 const CommentComponent = ({ data }) => {
@@ -100,18 +117,22 @@ const Post = (props) => {
   const [data, setData] = useState(props.data);
 
   const [time, setTime] = React.useState("");
-  const [chatAi,setChatAi] = useState(false);
+  const [chatAi, setChatAi] = useState(false);
   const user = useSelector((s) => s.user?.user);
   const UserDB = useSelector((s) => s.user?.userDB);
   const [savePostLoad, setSavePostLoad] = useState(false);
   const [postCreator, setPostCreator] = useState(data?.user);
   const [commentText, setCommentText] = useState("");
-  const [AIinfo,setAIinfo] = useState("Hi, I am your AI assistant");
+  const [AIinfo, setAIinfo] = useState("Hi, I am your AI assistant");
+  const [AIThinking,setAIThinking] = useState(false);
+  const [AIoutput, setAIoutput] = useState(false);
+  const [postCode,setPostCode] = useState(props.data?.postCode);
+  const [editable,setEditable] = useState(false);
   const [commentTextAI, setCommentTextAI] = useState("");
   const [commnentPopup, setCommentPopup] = useState(false);
   const [commentInputshow, setCommentInput] = React.useState(false);
   const [BOOK, setBOOK] = useState(false);
-  const [likeLoading,setLikeLoading] = useState(false);
+  const [likeLoading, setLikeLoading] = useState(false);
   const [liked, setLiked] = useState(false);
   const [showMenu, setshowMenu] = useState(false);
   const [showQuestion, setshowQuestion] = useState(false);
@@ -175,43 +196,28 @@ const Post = (props) => {
         error: "Comment can't posted ! Please Try again",
       });
       getPost();
-    } catch (err) {}
+    } catch (err) { }
   };
 
-  
+
   const submitCommentAI = async () => {
     if (commentTextAI.length == 0) {
       return;
     }
-    
-    setAIinfo("Thinking...");
-    
-    setTimeout(()=>{
-      setAIinfo("Output Generated");
-    },2000);
-
-    return;
+    setAIinfo("");
+    setAIThinking(true);
     try {
-      const res = axios.post(`${path}comment`, {
-        postid: data._id,
-        user: {
-          username: user.username,
-          profilePicture: user.profilePicture,
-          firstname: user.firstname,
-          lastname: user.lastname,
-          userId: user._id,
-        },
-        commentText,
+      const response = await axios.post(pathai, {
+        code: props.data?.postCode,
+        query: commentTextAI
       });
-
-      setCommentText("");
-      toast.promise(res, {
-        success: "Comment Posted",
-        pending: "posting Comment ...",
-        error: "Comment can't posted ! Please Try again",
-      });
-      getPost();
-    } catch (err) {}
+      setPostCode(response.data);
+      setAIoutput(true);
+    } catch (err) {
+      console.log(err);
+    }
+    setAIinfo("Output Generated ! Feel free to ask something more...");
+    setAIThinking(false);
   };
 
   const getPost = async () => {
@@ -267,7 +273,7 @@ const Post = (props) => {
       });
       console.log(response);
       setBOOK(true);
-    } catch (err) {}
+    } catch (err) { }
     setSavePostLoad(false);
   };
 
@@ -282,7 +288,7 @@ const Post = (props) => {
       if (response.data.success) {
         setBOOK(false);
       }
-    } catch (err) {}
+    } catch (err) { }
     setSavePostLoad(false);
   };
 
@@ -308,7 +314,7 @@ const Post = (props) => {
       ) : (
         ""
       )}
-      
+
       <ToastContainer></ToastContainer>
       <div className="post-head">
         <Link to={"/user/" + postCreator?.username}>
@@ -326,14 +332,14 @@ const Post = (props) => {
         </Link>
 
         <div>
-        
-        <div className="post-head-tools ml-2" onClick={() => {
-                  navigator?.clipboard?.writeText(
-                    window.location.host + "/post/" + data._id
-                  );
-                  toast.info("Link copied to Clipboard");
-                }}>
-                  <ShareIcon size={24} weight="duotone"></ShareIcon>
+
+          <div className="post-head-tools mx-1" onClick={() => {
+            navigator?.clipboard?.writeText(
+              window.location.host + "/post/" + data._id
+            );
+            toast.info("Link copied to Clipboard");
+          }}>
+            <ShareIcon size={24} weight="duotone"></ShareIcon>
           </div>
 
           <div
@@ -346,14 +352,26 @@ const Post = (props) => {
           </div>
           {data?.question && (
             <div
-              className="post-head-tools mx-2"
+              className="post-head-tools mx-1"
               onClick={() => setshowQuestion(!showQuestion)}
             >
               <IconButton>
                 <Book size={24} weight="duotone"></Book>
               </IconButton>
             </div>
+
           )}
+
+          <div
+            className="post-head-tools mx-1"
+            onClick={() => setEditable(!editable)}
+          >
+            <IconButton style={editable? {backgroundColor:"green",color:"white"}:{}}>
+              <PencilSimpleLine size={24} weight="duotone"></PencilSimpleLine>
+            </IconButton>
+          </div>
+
+
         </div>
       </div>
       {showQuestion && (
@@ -362,10 +380,10 @@ const Post = (props) => {
             Question :{" "}
             <Link
               to={"/problems?question=" + data?.question.questionID}
-              
+
             >
               <span>
-              {data?.question?.title}
+                {data?.question?.title}
               </span>
             </Link>
           </p>
@@ -387,15 +405,16 @@ const Post = (props) => {
             <p>{ele}</p>
           ))} */}
           <CodeMirror
-            value={data?.postCode}
+            value={postCode}
+            onChange={(value) => setPostCode(value)}
             style={{ maxHeight: "600px" }}
             theme={basicDark}
-            extensions={[langs.cpp(), EditorView.editable.of(false)]}
-            readOnly
+            extensions={[langs.cpp(), EditorView.editable.of(editable), EditorView.lineWrapping]}
+            readOnly={!editable}
           ></CodeMirror>
         </div>
 
-        
+
       </div>
       <div className="post-lower">
         <div className="post-lower-count">
@@ -523,15 +542,22 @@ const Post = (props) => {
             }}
           >
             <Tooltip title="Ask AI">
-              <Button variant="text" sx={{ color: "gray" }}>
+              <Button variant="text" sx={{ color: "gray" }}
+              >
                 <IconButton
-                  style={{
-                    backgroundColor: "#e4e6eb",
-                  }}
+                  style={
+                    chatAi ? {
+                      backgroundColor: "green",
+                      color: "white"
+                    } :
+                      {
+                        backgroundColor: "#e4e6eb",
+                      }
+                  }
                 >
                   <Brain size={26} />
                 </IconButton>
-                {window.outerWidth > 1090 && "Ask AI"}
+                {window.outerWidth > 1090 && (chatAi ? "Stop AI" : "Ask AI")}
               </Button>
             </Tooltip>
           </div>
@@ -588,29 +614,35 @@ const Post = (props) => {
           ""
         )}
 
-      {chatAi ? (
+        {chatAi ? (
           <>
-              <>
-                <div className="comment-Box">
-                  <div className="comment-Box-image">
-                      <Brain size={32}></Brain>
-                  </div>
-                  <div>
-                    <p>
-                      Meta Code Llama 
-                    </p>
-                    <span>
-                    {AIinfo}
-                    </span>
-                  </div>
+            <>
+              <div className={AIThinking ? "comment-Box flash-loader" : "comment-Box"}>
+                <div className="comment-Box-image">
+                  <Brain size={32}></Brain>
                 </div>
-                {/* <a
-                  style={{ padding: "10px" }}
-                  className="pointer"
-                >
-                  Reset Post text to original
-                </a> */}
-              </>
+                <div>
+                  <p>
+                    Meta Code Llama
+                  </p>
+                  
+                  <span className={ AIThinking ? "flash-animation" : ""}>
+                    {AIinfo}
+                  </span>
+
+                </div>
+              </div>
+              <a
+                style={{ padding: "10px" }}
+                className="pointer"
+                onClick={() => {
+                  setPostCode(props.data?.postCode);
+                  setAIoutput(false);
+                }}
+              >
+                Clear AI respone to original Post <span className="underline">Click here</span>
+              </a>
+            </>
             <div className="comment-edit">
               <span>
                 <Avatar src={UserDB?.profilePicture}></Avatar>

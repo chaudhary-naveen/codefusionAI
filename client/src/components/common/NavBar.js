@@ -100,7 +100,7 @@ const Navbar = () => {
                       marginLeft: "4px",
                     }}
                   >
-                    Venom's
+                      CodeFusion
                   </span>
                   <span
                     className=""
@@ -110,7 +110,7 @@ const Navbar = () => {
                       "font-size": "1.4rem",
                     }}
                   >
-                    Code
+                    AI
                   </span>
 
                   <Sidebar.ItemGroup
@@ -232,7 +232,7 @@ const Navbar = () => {
                   marginLeft: "4px",
                 }}
               >
-                Venom's
+                Code
               </span>
               <span
                 className=""
@@ -242,14 +242,16 @@ const Navbar = () => {
                   "font-size": "1.4rem",
                 }}
               >
-                Code
+                Fusion
               </span>
             </li>
             <li>
               <span
+                className="ml-2"
                 style={{
-                  margin: "4px",
+                  "font-weight": 800,
                   color: "gray",
+                  "font-size": "1.4rem",
                 }}
               >
                 {version}
