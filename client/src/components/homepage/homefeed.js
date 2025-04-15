@@ -39,9 +39,9 @@ const HomeFeed = ()=>{
     const [load,setLoad] = useState(false);
     const [showPopUp,setshowPopUp] = useState(false);
     
-    const cancel = ()=>{
-        setshowPopUp(false);
-    }
+    useEffect(()=>{
+        console.log(posts);
+    },[posts])
 
     const fetchPost = async ()=>{
         console.log("nahi");
@@ -102,7 +102,7 @@ const HomeFeed = ()=>{
         </>
         :( posts.length>0?
         <>
-        {posts.map((ele)=>{
+        {posts?.map((ele)=>{
             return (<Post data={ele}></Post>);
         })}
         
