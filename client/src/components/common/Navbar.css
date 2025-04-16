@@ -13,6 +13,9 @@
   border-color: #e5e7eb7a; 
   background-color: #ffffff; 
 }
+.navbar-container img{
+  border-radius: 50%;
+}
 @media (min-width: 768px) { 
   .navbar-container{
     padding-left: 2rem;

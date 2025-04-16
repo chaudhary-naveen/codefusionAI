@@ -124,10 +124,10 @@ const Post = (props) => {
   const [postCreator, setPostCreator] = useState(data?.user);
   const [commentText, setCommentText] = useState("");
   const [AIinfo, setAIinfo] = useState("Hi, I am your AI assistant");
-  const [AIThinking,setAIThinking] = useState(false);
+  const [AIThinking, setAIThinking] = useState(false);
   const [AIoutput, setAIoutput] = useState(false);
-  const [postCode,setPostCode] = useState(props.data?.postCode);
-  const [editable,setEditable] = useState(false);
+  const [postCode, setPostCode] = useState(props.data?.postCode);
+  const [editable, setEditable] = useState(false);
   const [commentTextAI, setCommentTextAI] = useState("");
   const [commnentPopup, setCommentPopup] = useState(false);
   const [commentInputshow, setCommentInput] = React.useState(false);
@@ -366,7 +366,7 @@ const Post = (props) => {
             className="post-head-tools mx-1"
             onClick={() => setEditable(!editable)}
           >
-            <IconButton style={editable? {backgroundColor:"green",color:"white"}:{}}>
+            <IconButton style={editable ? { backgroundColor: "green", color: "white" } : {}}>
               <PencilSimpleLine size={24} weight="duotone"></PencilSimpleLine>
             </IconButton>
           </div>
@@ -618,15 +618,23 @@ const Post = (props) => {
           <>
             <>
               <div className={AIThinking ? "comment-Box flash-loader" : "comment-Box"}>
+
                 <div className="comment-Box-image">
-                  <Brain size={32}></Brain>
+                  {
+                    AIThinking ? <div class="spinner">
+                      {/* <div class="spinnerin"></div> */}
+                      <Brain size={32} className="antispin"></Brain>
+                    </div>
+                      :
+                      <Brain size={32}></Brain>
+                  }
                 </div>
                 <div>
                   <p>
                     Meta Code Llama
                   </p>
-                  
-                  <span className={ AIThinking ? "flash-animation" : ""}>
+
+                  <span className={AIThinking ? "flash-animation" : ""}>
                     {AIinfo}
                   </span>
 

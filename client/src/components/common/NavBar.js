@@ -19,6 +19,7 @@ import {
   Bell,
   Book,
   YoutubeLogo,
+  Brain,
 } from "phosphor-react";
 
 import { youtubeLogoLink } from "../../path";
@@ -273,7 +274,11 @@ const Navbar = () => {
               People
               </li>
             </Link>
-            
+            <Link to="/ai-learning">
+              <li className="cursor-pointer flex-row flex p-1 rounded" style={{ minWidth: "4rem" , border:"1px solid gray" }}>
+              Learn with AI <Brain className={"mx-1"}size={24}></Brain>
+              </li>
+            </Link>
           </ul>
 
           <div style={{ flex: 1 }}></div>

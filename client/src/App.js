@@ -45,6 +45,7 @@ import NotificationPanel from "./components/common/NotificationPanel";
 import PeopleJS from "./components/People.js/People";
 import ProblemPage from "./components/problemPage/ProblemPage";
 import {DirectsContainer}  from "./components/homepage/MyDirects";
+import AIHomePage from "./components/AI/AIhomepage";
 
 
 const NotFound = ({ msg }) => {
@@ -140,6 +141,7 @@ function App() {
             <Route path="/sharepost" element={<SharePost></SharePost>}></Route>
             <Route path="/search" element={<Search></Search>}></Route>
             <Route path="/filter" element={<Filter></Filter>}></Route>
+            <Route path="/ai-learning" element={<AIHomePage></AIHomePage>}></Route>
             <Route path="/mydirects" element={<DirectsContainer></DirectsContainer>}></Route>
             <Route path="/people" element={<PeopleJS></PeopleJS>}></Route>
             <Route

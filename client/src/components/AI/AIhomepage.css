@@ -1,0 +1,65 @@
+.AIHomePage{
+    margin-top: 50px;
+    display: grid;
+    background-color: white;
+    height: calc( 100vh - 50px);
+    grid-template-rows: 1fr 3fr;
+}
+.AIHomePage > *{
+    /* border: 1px solid red; */
+}
+.AIHomePageTop{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px;
+}
+.AIHomePageTop  img{
+    width: 200px;
+    border-radius: 50%;
+}
+.AIHomePageBelow{
+    display: flex;
+    justify-items: center;
+    flex-direction: column;
+}
+.AIHomePageBelow > *{
+    /* border: 1px solid red; */
+    text-align: center;
+}
+.AIHomePageBelow > h1{
+    font-size: 2rem;
+}
+.AIHomePageBelow > p{
+    color: gray;
+}
+
+.spinnerContainerAIHomePage{
+  position: relative;
+  display: inline-block;
+}
+.spinnerContainerAIHomePage::before{
+    content: '';
+    position: absolute;
+    top: -5px;
+    bottom: -5px; /* rotate border only */
+    animation: rot55 1s linear infinite;
+    left: -5px;
+    right: -5px;
+    z-index: 1;
+    pointer-events: none;
+    border-radius: 50%;
+    box-shadow: -10px -10px 10px #6359f8, 0px -10px 10px 0px #9c32e2, 10px -10px 10px #f36896, 10px 0 10px #ff0b0b, 10px 10px 10px 0px#ff5500, 0 10px 10px 0px #ff9500, -10px 10px 10px 0px #ffb700;
+}
+.spinnerAIHomePage {
+    position: relative;
+    z-index: 2;
+    background: white;
+    padding: 0px;
+}
+
+@keyframes rot55 {
+    to {
+        transform: rotate(360deg);
+    }
+}
